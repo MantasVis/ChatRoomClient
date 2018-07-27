@@ -17,8 +17,6 @@ public class ControllerMain implements Initializable
 
     //FXML Objects
     @FXML
-    private JFXTextField usernameField;
-    @FXML
     private TextArea onlineUserArea, chatTextArea, inputTextArea;
 
     //FXML Actions
@@ -36,7 +34,7 @@ public class ControllerMain implements Initializable
     @Override
     public void initialize(URL location, ResourceBundle resources)
     {
-        client = new Client("127.0.0.1", chatTextArea, inputTextArea);
+        client = new Client("192.168.0.103", chatTextArea, inputTextArea);
         client.ableToType(false);
 
         ExecutorService service = Executors.newCachedThreadPool();
