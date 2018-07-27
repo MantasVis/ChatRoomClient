@@ -1,4 +1,4 @@
-package sample;
+package com.chatroom.client;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -10,10 +10,16 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-        primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(root, 300, 275));
+        Parent root = FXMLLoader.load(getClass().getResource("../resources/fxml/chatroom.fxml"));
+        primaryStage.setTitle("Instant messenger server");
+        primaryStage.setScene(new Scene(root, 723, 520));
         primaryStage.show();
+    }
+
+    @Override
+    public void stop()
+    {
+        System.exit(0);
     }
 
 
