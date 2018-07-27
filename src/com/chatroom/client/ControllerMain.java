@@ -8,6 +8,8 @@ import javafx.scene.control.TextArea;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ControllerMain implements Initializable
 {
@@ -34,7 +36,10 @@ public class ControllerMain implements Initializable
     @Override
     public void initialize(URL location, ResourceBundle resources)
     {
-        client = new Client(null, chatTextArea, inputTextArea);
+        client = new Client("127.0.0.1", chatTextArea, inputTextArea);
         client.ableToType(false);
+
+        ExecutorService service = Executors.newCachedThreadPool();
+        service.submit(() -> client.start());
     }
 }
