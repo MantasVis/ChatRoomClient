@@ -16,14 +16,15 @@ public class Client
     private ObjectInputStream input;
     private TextArea chatTextArea, inputTextArea;
     private String message = "";
-    private String serverIP;
+    private String serverIP, username;
     private Socket connection;
 
-    public Client(String host, TextArea chatTextArea, TextArea inputTextArea)
+    public Client(String host, TextArea chatTextArea, TextArea inputTextArea, String username)
     {
         this.chatTextArea = chatTextArea;
         this.inputTextArea = inputTextArea;
         this.serverIP = host;
+        this.username = username;
     }
 
     public void start()
@@ -120,9 +121,9 @@ public class Client
     {
         try
         {
-            output.writeObject("USER: " + message);
+            output.writeObject(username + ": " + message);
             output.flush();
-            showMessage("\nUSER: " + message);
+            //showMessage("\nUSER: " + message);
             inputTextArea.clear();
         }
         catch (IOException e)
