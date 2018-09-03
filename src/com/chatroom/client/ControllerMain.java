@@ -43,12 +43,14 @@ public class ControllerMain
 
     @FXML
     void disconnect(ActionEvent event) {
-
+        client.sendCommand("END_CONNECTION");
+        client.setDisconnected();
+        onlineUserArea.clear();
     }
 
     public void start(String username)
     {
-        client = new Client("192.168.0.104", chatTextArea, inputTextArea, username);
+        client = new Client("192.168.0.103", chatTextArea, inputTextArea, onlineUserArea, username);
         client.ableToType(false);
 
         ExecutorService service = Executors.newCachedThreadPool();
