@@ -50,12 +50,12 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <JFXButton layoutX="421.0" layoutY="417.0" onAction="#sendButton" prefHeight="61.0" prefWidth="68.0" style="-fx-background-color: grey;" text="Send" />
                   <TextArea fx:id="chatTextArea" editable="false" layoutX="33.0" layoutY="55.0" prefHeight="344.0" prefWidth="456.0" wrapText="true" />
-                  <JFXTextField fx:id="usernameField" layoutX="114.0" layoutY="10.0" prefHeight="25.0" prefWidth="202.0" />
-                  <JFXButton layoutX="418.0" layoutY="11.0" prefHeight="25.0" prefWidth="76.0" style="-fx-background-color: grey;" text="Disconnect" />
-                  <JFXButton layoutX="332.0" layoutY="11.0" prefHeight="25.0" prefWidth="76.0" style="-fx-background-color: grey;" text="Connect" />
                   <TextArea fx:id="inputTextArea" layoutX="33.0" layoutY="416.0" prefHeight="62.0" prefWidth="364.0" />
+                  <Button layoutX="424.0" layoutY="417.0" mnemonicParsing="false" onAction="#sendButton" prefHeight="61.0" prefWidth="65.0" text="Send" />
+                  <Button layoutX="325.0" layoutY="12.0" mnemonicParsing="false" onAction="#connect" prefHeight="25.0" prefWidth="78.0" text="Connect" />
+                  <Button layoutX="411.0" layoutY="12.0" mnemonicParsing="false" onAction="#disconnect" prefHeight="25.0" prefWidth="78.0" text="Disconnect" />
+                  <TextField fx:id="usernameField" layoutX="112.0" layoutY="12.0" prefHeight="25.0" prefWidth="197.0" />
                </children>
             </AnchorPane>
          </center>

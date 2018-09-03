@@ -14,16 +14,19 @@ public class Client
 {
     private ObjectOutputStream output;
     private ObjectInputStream input;
-    private TextArea chatTextArea, inputTextArea;
+    private TextArea chatTextArea, inputTextArea, onlineUserArea;
     private String message = "";
-    private String serverIP;
+    private String serverIP, username;
     private Socket connection;
+    private boolean disconnected = false;
 
-    public Client(String host, TextArea chatTextArea, TextArea inputTextArea)
+    public Client(String host, TextArea chatTextArea, TextArea inputTextArea, TextArea onlineUserArea, String username)
     {
         this.chatTextArea = chatTextArea;
         this.inputTextArea = inputTextArea;
+        this.onlineUserArea = onlineUserArea;
         this.serverIP = host;
+        this.username = username;
     }
 
     public void start()
@@ -68,7 +71,7 @@ public class Client
 
         input = new ObjectInputStream(connection.getInputStream());
 
-        showMessage("\nStreams are now set up! \n");
+        sendCommand("START_CONNECTION;" + username);
     }
 
     /**
@@ -83,14 +86,31 @@ public class Client
             try
             {
                 message = (String) input.readObject();
-                showMessage("\n" + message);
+
+                if (message.startsWith("Œ"))
+                {
+                    processCommand(message);
+                }
+                else
+                {
+                    showMessage("\n" + message);
+                }
             }
             catch (ClassNotFoundException e)
             {
                 showMessage("\nUser didn't send a string");
             }
         }
-        while (!message.equals("SERVER: END"));
+        while (!disconnected);
+    }
+
+    private void processCommand(String command)
+    {
+        if (command.contains("USER_LIST"))
+        {
+            String userList = command.split(":")[1];
+            Platform.runLater(() -> onlineUserArea.setText(userList));
+        }
     }
 
     /**
@@ -120,15 +140,36 @@ public class Client
     {
         try
         {
-            output.writeObject("USER: " + message);
+            output.writeObject(username + ": " + message);
             output.flush();
-            showMessage("\nUSER: " + message);
             inputTextArea.clear();
         }
         catch (IOException e)
         {
             chatTextArea.appendText("\nError sending message");
         }
+    }
+
+    /**
+     * Sends commands
+     */
+    public void sendCommand(String command)
+    {
+        try
+        {
+            output.writeObject("Œ" + command);
+            output.flush();
+            inputTextArea.clear();
+        }
+        catch (IOException e)
+        {
+            chatTextArea.appendText("\nError sending command");
+        }
+    }
+
+    public void setDisconnected()
+    {
+        disconnected = true;
     }
 
     /**
