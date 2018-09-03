@@ -118,7 +118,7 @@ public class Client
      */
     private void closeClient()
     {
-        showMessage("\nClosing connections... \n");
+        showMessage("Closing connections... \n\n");
         ableToType(false);
 
         try

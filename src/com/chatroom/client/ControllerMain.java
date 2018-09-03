@@ -3,10 +3,18 @@ package com.chatroom.client;
 import com.jfoenix.controls.JFXTextField;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
@@ -21,6 +29,11 @@ public class ControllerMain
     private TextArea onlineUserArea, chatTextArea, inputTextArea;
     @FXML
     private TextField usernameField;
+    @FXML
+    private StackPane sp;
+
+    private boolean connected = false;
+    private static String username, ip;
 
     //FXML Actions
     @FXML
@@ -35,10 +48,31 @@ public class ControllerMain
     }
 
     @FXML
-    void connect(ActionEvent event)
+    void connect(ActionEvent event) throws IOException
     {
-        String username = usernameField.getText();
-        start(username);
+        if (connected)
+        {
+            Alert alert = new Alert(Alert.AlertType.NONE, "You are already connected", ButtonType.OK);
+            alert.showAndWait();
+
+            if (alert.getResult() == ButtonType.OK) {
+                alert.close();
+            }
+        }
+        else
+        {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/connectMenu.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Connect to server");
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            ControllerConnect controllerConnect = loader.getController();
+            //controllerConnect.setTextAreas(onlineUserArea, chatTextArea, inputTextArea);
+            ControllerMain controllerMain = this;
+            controllerConnect.setControllerMain(controllerMain);
+            stage.show();
+        }
     }
 
     @FXML
@@ -46,14 +80,21 @@ public class ControllerMain
         client.sendCommand("END_CONNECTION");
         client.setDisconnected();
         onlineUserArea.clear();
+        connected = false;
     }
 
-    public void start(String username)
+    public void start(String ip, String username)
     {
-        client = new Client("192.168.0.103", chatTextArea, inputTextArea, onlineUserArea, username);
+        client = new Client(ip, chatTextArea, inputTextArea, onlineUserArea, username);
         client.ableToType(false);
 
         ExecutorService service = Executors.newCachedThreadPool();
         service.submit(() -> client.start());
+    }
+
+    public static void setConnectionVariables(String user, String IP)
+    {
+        username = user;
+        ip = IP;
     }
 }
