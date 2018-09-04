@@ -2,15 +2,11 @@ package com.chatroom.client;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-
-import javax.xml.soap.Text;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 
 public class ControllerConnect
 {
@@ -34,7 +30,40 @@ public class ControllerConnect
         String username = usernameField.getText();
         String ip = ipField.getText();
 
-        controllerMain.start(ip, username);
+        if (username.equals(""))
+        {
+            Alert alert = new Alert(Alert.AlertType.NONE, "Please choose a username", ButtonType.OK);
+            alert.showAndWait();
+
+            if (alert.getResult() == ButtonType.OK) {
+                alert.close();
+            }
+        }
+        else if (ip.equals(""))
+        {
+            Alert alert = new Alert(Alert.AlertType.NONE, "Please enter a valid IP", ButtonType.OK);
+            alert.showAndWait();
+
+            if (alert.getResult() == ButtonType.OK) {
+                alert.close();
+            }
+        }
+        else if(username.contains("Œ"))
+        {
+            Alert alert = new Alert(Alert.AlertType.NONE, "Illegal character in the username", ButtonType.OK);
+            alert.showAndWait();
+
+            if (alert.getResult() == ButtonType.OK) {
+                alert.close();
+            }
+        }
+        else
+        {
+            controllerMain.start(ip, username);
+
+            Stage stage = (Stage) ap.getScene().getWindow();
+            stage.close();
+        }
     }
 
    public void setControllerMain(ControllerMain controllerMain)

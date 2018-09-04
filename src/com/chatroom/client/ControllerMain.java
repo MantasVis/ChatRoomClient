@@ -1,22 +1,18 @@
 package com.chatroom.client;
 
-import com.jfoenix.controls.JFXTextField;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.StackPane;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -27,24 +23,26 @@ public class ControllerMain
     //FXML Objects
     @FXML
     private TextArea onlineUserArea, chatTextArea, inputTextArea;
-    @FXML
-    private TextField usernameField;
-    @FXML
-    private StackPane sp;
 
     private boolean connected = false;
-    private static String username, ip;
 
     //FXML Actions
     @FXML
     void sendButton(ActionEvent event)
     {
         String message = inputTextArea.getText();
-        if (!message.equals(""))
+        sendMessage(message);
+    }
+
+    @FXML
+    void enterKey(KeyEvent event)
+    {
+        if (event.getCode().equals(KeyCode.ENTER))
         {
-            client.sendMessage(message);
+            String message = inputTextArea.getText();
+            sendMessage(message);
+            inputTextArea.clear();
         }
-        inputTextArea.clear();
     }
 
     @FXML
@@ -68,7 +66,6 @@ public class ControllerMain
             Scene scene = new Scene(root);
             stage.setScene(scene);
             ControllerConnect controllerConnect = loader.getController();
-            //controllerConnect.setTextAreas(onlineUserArea, chatTextArea, inputTextArea);
             ControllerMain controllerMain = this;
             controllerConnect.setControllerMain(controllerMain);
             stage.show();
@@ -76,25 +73,33 @@ public class ControllerMain
     }
 
     @FXML
-    void disconnect(ActionEvent event) {
-        client.sendCommand("END_CONNECTION");
-        client.setDisconnected();
-        onlineUserArea.clear();
-        connected = false;
+    void disconnect(ActionEvent event)
+    {
+        if (connected)
+        {
+            client.sendCommand("END_CONNECTION");
+            client.setDisconnected();
+            onlineUserArea.clear();
+            connected = false;
+        }
+    }
+
+    public void sendMessage(String message)
+    {
+        if (!message.equals(""))
+        {
+            client.sendMessage(message);
+        }
+        inputTextArea.clear();
     }
 
     public void start(String ip, String username)
     {
         client = new Client(ip, chatTextArea, inputTextArea, onlineUserArea, username);
         client.ableToType(false);
+        connected = true;
 
         ExecutorService service = Executors.newCachedThreadPool();
         service.submit(() -> client.start());
-    }
-
-    public static void setConnectionVariables(String user, String IP)
-    {
-        username = user;
-        ip = IP;
     }
 }
