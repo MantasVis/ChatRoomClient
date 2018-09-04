@@ -7,8 +7,10 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 public class Client
 {
@@ -56,9 +58,20 @@ public class Client
      */
     private void connectToServer() throws IOException
     {
-        showMessage("Attempting connection to server... \n");
-        connection = new Socket(InetAddress.getByName(serverIP), 6789);
-        showMessage("Connected to: " + connection.getInetAddress().getHostName());
+        try
+        {
+            showMessage("Attempting connection to server... \n");
+            connection = new Socket(InetAddress.getByName(serverIP), 6789);
+            showMessage("Connected to: " + connection.getInetAddress().getHostName());
+        }
+        catch (ConnectException e)
+        {
+            showMessage("Failed to connect to server!\n");
+        }
+        catch (UnknownHostException e)
+        {
+            showMessage("Incorrect server IP address. Please try again...");
+        }
     }
 
     /**
@@ -118,7 +131,6 @@ public class Client
      */
     private void closeClient()
     {
-        showMessage("\nClosing connections... \n");
         ableToType(false);
 
         try

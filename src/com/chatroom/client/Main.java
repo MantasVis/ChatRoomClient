@@ -16,6 +16,7 @@ public class Main extends Application {
             Parent root = FXMLLoader.load(getClass().getResource("/chatroom.fxml"));
             primaryStage.setTitle("Instant messenger client");
             primaryStage.setScene(new Scene(root, 723, 520));
+            primaryStage.setResizable(false);
             primaryStage.show();
         }
         catch (Exception e)
