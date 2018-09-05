@@ -4,7 +4,7 @@ The client for the instant messaging app. Allows you to chat with other clients 
 
 ## Features
 
-* Chat with other people on the LAN.
+* Chat with other people over LAN.
 
 ### ToDo List
 
