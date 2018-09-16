@@ -13,9 +13,12 @@ public class Main extends Application {
     {
         try
         {
-            Parent root = FXMLLoader.load(getClass().getResource("/chatroom.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/chatroom.fxml"));
+            Parent root = loader.load();
             primaryStage.setTitle("Instant messenger client");
-            primaryStage.setScene(new Scene(root, 723, 520));
+            Scene scene = new Scene(root, 740, 520);
+            scene.getStylesheets().add("/redLounge.css");
+            primaryStage.setScene(scene);
             primaryStage.setResizable(false);
             primaryStage.show();
         }

@@ -2,6 +2,8 @@ package com.chatroom.client;
 
 import javafx.application.Platform;
 import javafx.scene.control.TextArea;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -16,13 +18,14 @@ public class Client
 {
     private ObjectOutputStream output;
     private ObjectInputStream input;
-    private TextArea chatTextArea, inputTextArea, onlineUserArea;
+    private TextArea inputTextArea;
+    private TextFlow chatTextArea, onlineUserArea;
     private String message = "";
     private String serverIP, username;
     private Socket connection;
     private boolean disconnected = false;
 
-    public Client(String host, TextArea chatTextArea, TextArea inputTextArea, TextArea onlineUserArea, String username)
+    public Client(String host, TextFlow chatTextArea, TextArea inputTextArea, TextFlow onlineUserArea, String username)
     {
         this.chatTextArea = chatTextArea;
         this.inputTextArea = inputTextArea;
@@ -121,8 +124,8 @@ public class Client
     {
         if (command.contains("USER_LIST"))
         {
-            String userList = command.split(":")[1];
-            Platform.runLater(() -> onlineUserArea.setText(userList));
+            Text userList = new Text(command.split(":")[1]);
+            Platform.runLater(() -> onlineUserArea.getChildren().add(userList));
         }
     }
 
@@ -158,7 +161,8 @@ public class Client
         }
         catch (IOException e)
         {
-            chatTextArea.appendText("\nError sending message");
+            Text t1 = new Text("\nError sending message");
+            chatTextArea.getChildren().add(t1);
         }
     }
 
@@ -175,7 +179,8 @@ public class Client
         }
         catch (IOException e)
         {
-            chatTextArea.appendText("\nError sending command");
+            Text t1 = new Text("\nError sending command");
+            chatTextArea.getChildren().add(t1);
         }
     }
 
@@ -189,7 +194,8 @@ public class Client
      */
     private void showMessage(final String text)
     {
-        Platform.runLater(() -> chatTextArea.appendText(text));
+        Text t1 = new Text(text);
+        Platform.runLater(() -> chatTextArea.getChildren().add(t1));
     }
 
     /**
